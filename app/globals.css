@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- Globaux --- */
+html, body {
+  @apply scroll-smooth;
+}
+
+/* Couleurs de sélection + focus accessibles */
+::selection {
+  background: rgba(14,165,233,.25); /* brand/25 */
+}
+:focus-visible {
+  @apply outline-none ring-2 ring-brand/60 ring-offset-2 ring-offset-white dark:ring-offset-[#0b1020];
+}
+
+/* --- Layout utilitaires --- */
+.section { @apply max-w-6xl mx-auto px-6; }
+.h2 { @apply text-3xl md:text-4xl font-bold mb-6 text-slate-900 dark:text-white; }
+
+/* Gradient de fond subtil (adapte light/dark) */
+.gradient {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.12), transparent),
+    radial-gradient(1200px 600px at 90% 110%, rgba(14,165,233,.10), transparent);
+}
+.dark .gradient {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.15), transparent),
+    radial-gradient(1200px 600px at 90% 110%, rgba(14,165,233,.15), transparent);
+}
+
+/* --- Composants --- */
+@layer components {
+  /* Cartes lisibles en clair & sombre */
+  .card {
+    @apply rounded-2xl p-6 transition border;
+    @apply bg-white border-black/10;                 /* light */
+    @apply dark:bg-white/5 dark:border-white/10;     /* dark  */
+  }
+  .card:hover { @apply border-brand/60; }
+
+  /* Badges/chips */
+  .badge {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs mr-2 mb-2 border;
+    @apply text-slate-700 bg-black/5 border-black/10;                 /* light */
+    @apply dark:text-white/80 dark:bg-white/5 dark:border-white/10;   /* dark  */
+  }
+
+  /* Liens */
+  .link { @apply text-brand hover:underline; }
+
+  /* Boutons stylés réutilisables */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-medium transition;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white hover:bg-brand/80;
+  }
+  .btn-outline {
+    @apply btn border;
+    @apply border-black/10 text-slate-800 hover:border-brand/60;         /* light */
+    @apply dark:border-white/10 dark:text-white/90 dark:hover:border-brand/60; /* dark  */
+  }
+}
+
+/* --- Typo par défaut pour le corps --- */
+@layer base {
+  body {
+    @apply bg-white text-slate-900 dark:bg-[#0b1020] dark:text-white antialiased;
+  }
+  p {
+    @apply text-slate-700 dark:text-white/80 leading-relaxed;
+  }
+}
+
+/* --- Scrollbar (facultatif, propre) --- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148,163,184,.6) transparent; /* slate-400 */
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background-color: rgba(148,163,184,.6);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track { background: transparent; }
