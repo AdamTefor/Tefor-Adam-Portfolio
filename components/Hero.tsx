@@ -113,7 +113,7 @@ export default function Hero() {
 
             {/* Badge ISTQB collé à la photo */}
             <a
-              href="https://www.istqb.org/certifications/certified-tester-foundation-level-ctfl.html"
+              href="https://app.skillsclub.com/credential/267180-e78e598aa30689c969da12d333dc15b2f1a1b8de520059025a3c7934ebbb44b8"
               target="_blank"
               rel="noreferrer"
               className="group absolute -bottom-4 -right-6 md:-bottom-6 md:-right-8"
