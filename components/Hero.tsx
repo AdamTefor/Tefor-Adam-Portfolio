@@ -71,9 +71,15 @@ export default function Hero() {
             <a href="#experience" className={`${ctaBase} bg-slate-900/5 dark:bg-white/5 hover:bg-slate-900/10 dark:hover:bg-white/10 border border-black/10 dark:border-white/10 text-slate-800 dark:text-white/90`}>
               Voir mes expériences
             </a>
-            <a href="/cv/CV-TEFOR-ADAM.pdf" download className={`${ctaBase} border border-black/10 dark:border-white/10 hover:border-brand/60 hover:text-brand`}>
-              Télécharger mon CV
-            </a>
+            <a
+  href="/cv/CV-TEFOR-ADAM.pdf"
+  download
+  onClick={() => (window as any).plausible?.('cv_download')} // 🔹 suivi Plausible
+  className={`${ctaBase} border border-black/10 dark:border-white/10 hover:border-brand/60 hover:text-brand`}
+>
+  Télécharger mon CV
+</a>
+
           </motion.div>
 
           <motion.div variants={fadeUp} className="mt-7 flex items-center gap-5" aria-label="Réseaux sociaux">

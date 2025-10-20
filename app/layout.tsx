@@ -1,8 +1,10 @@
 // app/layout.tsx
 import './globals.css';
 import type { ReactNode } from 'react';
+import Script from 'next/script';
 import Providers from './providers';
 
+// Tu peux laisser sans typage strict pour éviter tes erreurs précédentes
 export const metadata = {
   title: 'Adam Tefor – Portfolio',
   description:
@@ -16,7 +18,7 @@ export const metadata = {
     siteName: 'Adam Tefor',
     images: [
       {
-        url: '/images/adam-tefor.jpg', // assure-toi que le fichier existe sous /public/images/
+        url: '/images/adam-tefor.jpg', // le fichier doit exister dans /public/images
         width: 1200,
         height: 630,
         alt: 'Adam Tefor',
@@ -31,10 +33,18 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr" suppressHydrationWarning>
+      <head>
+        {/* Plausible Analytics (remplace par ton domaine de prod) */}
+        <Script
+          src="https://plausible.io/js/script.js"
+          strategy="afterInteractive"
+          data-domain="https://tefor-adam-portfolio.vercel.app/"
+        />
+      </head>
+
       <body className="bg-white text-slate-900 dark:bg-[#0b1020] dark:text-white antialiased">
         <div className="min-h-screen">
           <Providers>{children}</Providers>
-          {/* Si tu n'as pas de Providers, remplace par simplement {children} */}
         </div>
       </body>
     </html>
