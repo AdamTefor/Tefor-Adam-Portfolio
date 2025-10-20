@@ -16,7 +16,7 @@ const TABS: { key: TabKey; label: string; icon?: JSX.Element }[] = [
 const PROFILE = {
   fullName: 'Adam Tefor',
   headline: 'ingénieur d’État en Ingénierie Informatique et Réseaux – Option MIAGE (Méthodes Informatiques Appliquées à la Gestion des Entreprises) - certifié ISTQB®',
-  location: 'Rabat, Maroc',
+  location: 'Salé, Maroc',
   email: 'adamtefor37@gmail.com',   
   phone: '06 66 63 32 67',   
 };
