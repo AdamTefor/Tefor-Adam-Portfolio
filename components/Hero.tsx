@@ -50,7 +50,7 @@ export default function Hero() {
           <motion.p variants={fadeUp} className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-brand">
             Ingénieur Informatique & Réseaux
             <span className="hidden sm:inline-block rounded-full bg-brand/10 px-2 py-0.5 text-[11px] text-brand">
-              Ouvert aux opportunités PFE
+              Ouvert aux opportunités de stage PFE
             </span>
           </motion.p>
 
@@ -72,7 +72,7 @@ export default function Hero() {
               Voir mes expériences
             </a>
             <a
-  href="/cv/CV-TEFOR-ADAM.pdf"
+  href="/cv/CV-ADAM-TEFOR.pdf"
   download
   onClick={() => (window as any).plausible?.('cv_download')} // 🔹 suivi Plausible
   className={`${ctaBase} border border-black/10 dark:border-white/10 hover:border-brand/60 hover:text-brand`}
