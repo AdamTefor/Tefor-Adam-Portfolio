@@ -1,9 +1,12 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import ThemeToggle from '@/components/ThemeToggle';
+
+// ⚠️ Mets ta vraie image dans /public/images/profile.jpg
+// (si tu veux absolument <Image />, tu peux le remettre, mais ici on garde <img />
+// pour éviter les erreurs de typage autour de next/image dans ta config actuelle.)
 
 type NavItem = { href: `#${string}`; label: string };
 
@@ -19,11 +22,11 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState<string>('#home');
+  const [open, setOpen] = useState(false);       // menu mobile ouvert ?
+  const [scrolled, setScrolled] = useState(false); // header fond/bloc après scroll
+  const [active, setActive] = useState<string>('#home'); // section en focus
 
-  // Détecte le scroll pour l'effet de verre + bordure
+  // Fond du header après scroll
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -31,38 +34,45 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Ferme le menu quand l’ancre change (clic mobile)
+  // Ferme le menu mobile si on change d'ancre
   useEffect(() => {
     const onHash = () => setOpen(false);
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  // IntersectionObserver pour surligner la section active
+  // Met à jour l’onglet actif selon la section visible (scroll spy)
   useEffect(() => {
     const ids = NAV_ITEMS.map(i => i.href.replace('#', ''));
     const sections = ids
-      .map((id) => document.getElementById(id))
+      .map(id => document.getElementById(id))
       .filter((el): el is HTMLElement => !!el);
 
-    if (sections.length === 0) return;
+    if (!sections.length) return;
 
-    const obs = new IntersectionObserver(
-      (entries) => {
-        // On prend l’entrée la plus visible
-        const visible = entries
+    const io = new IntersectionObserver(
+      entries => {
+        // On prend la section la plus visible à l'écran
+        const best = entries
           .filter(e => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio - a.intersectionRatio))[0];
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-        if (visible?.target?.id) setActive(`#${visible.target.id}`);
+        if (best?.target?.id) {
+          setActive(`#${best.target.id}`);
+        }
       },
-      { root: null, rootMargin: '-10% 0px -70% 0px', threshold: [0.15, 0.33, 0.66, 0.9] }
+      {
+        root: null,
+        rootMargin: '-10% 0px -70% 0px', // déclenche un peu avant le centre
+        threshold: [0.15, 0.33, 0.66, 0.9],
+      }
     );
 
-    sections.forEach(sec => obs.observe(sec));
-    return () => obs.disconnect();
+    sections.forEach(sec => io.observe(sec));
+    return () => io.disconnect();
   }, []);
 
+  // classes dynamiques du header (fond verre collant)
   const headerClasses = useMemo(
     () =>
       [
@@ -76,11 +86,11 @@ export default function Navbar() {
   );
 
   const linkBase =
-    'inline-block px-1 py-2 transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded';
+    'inline-block px-1 py-2 text-sm transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded';
 
   return (
     <header className={headerClasses} role="banner">
-      {/* Lien “skip to content” */}
+      {/* Lien 'skip to content' accessibilité */}
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 rounded-lg bg-brand px-3 py-2 text-sm text-white"
@@ -88,30 +98,28 @@ export default function Navbar() {
         Aller au contenu
       </a>
 
+      {/* BARRE */}
       <nav
         className="section mx-auto flex h-16 items-center justify-between px-4 sm:px-6"
         role="navigation"
         aria-label="Navigation principale"
       >
-        {/* Marque + Profil */}
+        {/* --------- LOGO / NOM --------- */}
         <Link
           href="#home"
           className="group inline-flex items-center gap-3 min-w-0"
           aria-label="Revenir à l’accueil"
         >
           <span className="relative inline-flex h-9 w-9 shrink-0 overflow-hidden rounded-full ring-1 ring-black/10 dark:ring-white/10">
-            {/* Mets ton image dans /public/profile.jpg */}
-            <Image
+            <img
               src="/images/profile.jpg"
               alt="Photo de profil d’Adam Tefor"
-              fill
-              sizes="36px"
-              className="object-cover"
-              priority
+              className="h-full w-full object-cover"
             />
           </span>
+
           <span className="flex flex-col leading-tight">
-            <span className="font-extrabold tracking-tight text-base sm:text-lg">
+            <span className="font-extrabold tracking-tight text-base sm:text-lg text-slate-900 dark:text-white">
               Adam Tefor<span className="text-brand">.</span>
             </span>
             <span className="text-[11px] sm:text-xs text-slate-600 dark:text-white/60">
@@ -120,15 +128,16 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop */}
+        {/* --------- NAV DESKTOP --------- */}
         <div className="hidden items-center gap-6 md:flex">
-          <ul className="flex items-center gap-4 text-sm text-slate-700 dark:text-white/80">
-            {NAV_ITEMS.map((it) => {
-              const isActive = active === it.href;
+          {/* Liens */}
+          <ul className="flex items-center gap-4 text-slate-700 dark:text-white/80">
+            {NAV_ITEMS.map(item => {
+              const isActive = active === item.href;
               return (
-                <li key={it.href}>
+                <li key={item.href}>
                   <a
-                    href={it.href}
+                    href={item.href}
                     className={[
                       linkBase,
                       isActive
@@ -137,16 +146,15 @@ export default function Navbar() {
                     ].join(' ')}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    <span className="relative">
-                      {it.label}
-                      {/* Soulignement animé pour l’actif */}
+                    <span className="relative inline-flex flex-col items-start">
+                      {item.label}
+                      {/* soulignement animé sous le lien actif */}
                       <span
-                        className={[
-                          'pointer-events-none absolute -bottom-0.5 left-0 h-[2px] w-full rounded',
-                          isActive ? 'bg-brand scale-x-100' : 'bg-brand/40 scale-x-0',
-                          'origin-left transition-transform duration-300 ease-out',
-                        ].join(' ')}
                         aria-hidden="true"
+                        className={[
+                          'block h-[2px] w-full rounded bg-brand/40 origin-left transition-all duration-300 ease-out',
+                          isActive ? 'scale-x-100 bg-brand' : 'scale-x-0',
+                        ].join(' ')}
                       />
                     </span>
                   </a>
@@ -155,100 +163,134 @@ export default function Navbar() {
             })}
           </ul>
 
-          <div className="ml-2 h-6 w-px bg-black/10 dark:bg-white/10" aria-hidden="true" />
+          {/* séparation + bouton thème + bouton CV */}
+          <div
+            className="ml-2 h-6 w-px bg-black/10 dark:bg-white/10"
+            aria-hidden="true"
+          />
           <ThemeToggle />
-          
-                  </div>
 
-        {/* Mobile */}
+          <a
+            href="/cv/CV-ADAM-TEFOR.pdf"
+            download
+            className="rounded-xl border border-black/10 dark:border-white/10 px-3 py-2 text-sm font-medium text-slate-700 dark:text-white/80 hover:border-brand/60 hover:text-brand transition"
+          >
+            CV
+          </a>
+        </div>
+
+        {/* --------- NAV MOBILE (bouton burger) --------- */}
         <div className="md:hidden flex items-center gap-2">
           <ThemeToggle />
+
           <button
             type="button"
-            className="rounded-xl border border-black/10 dark:border-white/10 px-3 py-2 text-sm hover:border-brand/60"
+            className="rounded-xl border border-black/10 dark:border-white/10 px-3 py-2 text-sm font-medium text-slate-700 dark:text-white/80 hover:border-brand/60 hover:text-brand transition"
             aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
             aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setOpen(prev => !prev)}
           >
             {open ? '✕' : '☰'}
           </button>
         </div>
       </nav>
 
-      {/* Drawer Mobile + Backdrop */}
+      {/* --------- DRAWER MOBILE --------- */}
       {open && (
         <>
-          <div
+          {/* Fond noir derrière le menu mobile */}
+          <button
             className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[1px] md:hidden"
             onClick={() => setOpen(false)}
-            aria-hidden="true"
+            aria-label="Fermer le menu"
           />
-          <div
+
+          {/* Panneau latéral mobile */}
+          <aside
             className="fixed inset-y-0 right-0 z-50 w-72 max-w-[85%] md:hidden
                        bg-white/85 dark:bg-black/60 backdrop-blur
                        border-l border-black/10 dark:border-white/10
-                       shadow-2xl"
+                       shadow-2xl flex flex-col"
             role="dialog"
-            aria-label="Menu"
+            aria-modal="true"
+            aria-label="Menu mobile"
           >
-            <div className="flex items-center justify-between px-4 h-16">
+            {/* Header du drawer */}
+            <div className="flex items-center justify-between px-4 h-16 border-b border-black/5 dark:border-white/10">
               <div className="inline-flex items-center gap-3">
                 <span className="relative inline-flex h-9 w-9 overflow-hidden rounded-full ring-1 ring-black/10 dark:ring-white/10">
-                  <Image
-                    src="/profile.jpg"
+                  <img
+                    src="/images/profile.jpg"
                     alt="Photo de profil d’Adam Tefor"
-                    fill
-                    sizes="36px"
-                    className="object-cover"
-                    priority
+                    className="h-full w-full object-cover"
                   />
                 </span>
-                <div className="flex flex-col">
-                  <span className="font-semibold leading-tight">Adam Tefor</span>
+                <div className="flex flex-col leading-tight">
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    Adam Tefor
+                  </span>
                   <span className="text-[11px] text-slate-600 dark:text-white/60">
-                    Ingénieur QA & Dév
+                    Ingénieur QA & Dev
                   </span>
                 </div>
               </div>
+
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-xl border border-black/10 dark:border-white/10 px-2 py-1 text-sm hover:border-brand/60"
+                className="rounded-xl border border-black/10 dark:border-white/10 px-2 py-1 text-sm text-slate-700 dark:text-white/80 hover:border-brand/60 hover:text-brand transition"
                 aria-label="Fermer le menu"
               >
                 ✕
               </button>
             </div>
 
-            <ul className="px-2 pb-4 text-sm text-slate-800 dark:text-white/80">
-              {NAV_ITEMS.map((it) => {
-                const isActive = active === it.href;
+            {/* Liens nav dans le drawer */}
+            <ul className="flex-1 overflow-y-auto px-2 pb-4 text-sm text-slate-800 dark:text-white/80">
+              {NAV_ITEMS.map(item => {
+                const isActive = active === item.href;
                 return (
-                  <li key={it.href} className="mx-2 border-b last:border-b-0 border-black/5 dark:border-white/10">
+                  <li
+                    key={item.href}
+                    className="mx-2 border-b last:border-b-0 border-black/5 dark:border-white/10"
+                  >
                     <a
-                      href={it.href}
+                      href={item.href}
                       className={[
-                        'block py-3',
-                        isActive ? 'text-brand' : 'hover:text-brand',
+                        'block py-3 transition-colors',
+                        isActive
+                          ? 'text-brand'
+                          : 'hover:text-brand text-slate-700 dark:text-white/80',
                       ].join(' ')}
                       onClick={() => setOpen(false)}
                       aria-current={isActive ? 'page' : undefined}
                     >
-                      {it.label}
+                      {item.label}
                     </a>
                   </li>
                 );
               })}
-              <li className="mx-2 pt-2">
+
+              {/* lien CV mobile */}
+              <li className="mx-2 pt-3">
                 <a
-                  href="/CV-Adam-Tefor.pdf"
-                  className="inline-flex items-center gap-2 rounded-xl border border-black/10 dark:border-white/10 px-3 py-2 hover:border-brand/60 hover:text-brand"
+                 href="/cv/CV-ADAM-TEFOR.pdf"
+                  download
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-black/10 dark:border-white/10 px-3 py-2 text-sm font-medium text-slate-700 dark:text-white/80 hover:border-brand/60 hover:text-brand transition"
                 >
                   Télécharger mon CV
                 </a>
               </li>
             </ul>
-          </div>
+
+            {/* bas du drawer (optionnel : contact direct) */}
+            <div className="border-t border-black/5 dark:border-white/10 p-4 text-[11px] text-slate-600 dark:text-white/50">
+              <p>
+                Disponible pour Stage PFE (Février 2026)<br />
+                Ingénierie QA / Automatisation / Dev Full-Stack.
+              </p>
+            </div>
+          </aside>
         </>
       )}
     </header>
