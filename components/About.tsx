@@ -16,9 +16,9 @@ const TABS: { key: TabKey; label: string; icon?: JSX.Element }[] = [
 const PROFILE = {
   fullName: 'Adam Tefor',
   headline: 'ingénieur d’État en Ingénierie Informatique et Réseaux – Option MIAGE (Méthodes Informatiques Appliquées à la Gestion des Entreprises) - certifié ISTQB®',
-  location: 'Rabat, Maroc',
-  email: '--------',   
-  phone: '--------',   
+  location: 'Salé, Maroc',
+  email: 'adamtefor37@gmail.com',   
+  phone: '06 66 63 32 67',   
 };
 
 const SOFT_SKILLS = [
@@ -113,7 +113,7 @@ export default function About() {
               <div className={card}>
                 <h3 className="text-xl font-bold">Qui suis-je ?</h3>
                 <p className="mt-3 text-slate-700 dark:text-white/80 leading-relaxed">
-                 Ingénieur QA & Développeur Full-Stack, spécialité Génie Informatique & Réseaux.
+                  Étudiant en 5ᵉ année à l’<b>EMSI Rabat</b>, spécialité Génie Informatique & Réseaux.
                   Passionné par le développement et l’assurance qualité logicielle, j’ai réalisé des
                   projets et stages (notamment chez <b>Orange Business Services</b>) en testing
                   fonctionnel et automatisé avec <b>Robot Framework</b>, <b>Selenium</b> et <b>Jenkins</b>.

@@ -81,7 +81,7 @@ export default function Contact() {
                     href="mailto:adamtefor37@gmail.com"
                     className="text-slate-700 dark:text-white/80 hover:text-brand"
                   >
-                    --------
+                    adamtefor37@gmail.com
                   </a>
                 </div>
               </li>
@@ -92,7 +92,7 @@ export default function Contact() {
                 </span>
                 <div>
                   <p className="text-sm font-medium">Téléphone</p>
-                  <p className="text-slate-700 dark:text-white/80">+212 --------</p>
+                  <p className="text-slate-700 dark:text-white/80">+212 6 66 63 32 67</p>
                 </div>
               </li>
 
@@ -243,7 +243,13 @@ export default function Contact() {
         </motion.div>
       </div>
 
-   
+      {/* Lien direct email (fallback) */}
+      <p className="mt-6 text-slate-700 dark:text-white/80">
+        Ou par email :{' '}
+        <a className="text-brand font-medium hover:underline" href="mailto:adamtefor37@gmail.com">
+          adamtefor37@gmail.com
+        </a>
+      </p>
     </section>
   );
 }

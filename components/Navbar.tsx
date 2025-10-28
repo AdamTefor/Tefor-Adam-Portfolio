@@ -173,7 +173,14 @@ export default function Navbar() {
             {/* bouton thème */}
             <ThemeToggle />
 
-           
+            {/* bouton CV */}
+            <a
+              href="/cv/CV-ADAM-TEFOR.pdf"
+              download
+              className="rounded-xl border border-white/20 px-3 py-2 text-[13px] font-medium text-white/80 hover:text-brand hover:border-brand/60 transition"
+            >
+              CV
+            </a>
           </div>
 
           {/* BOUTONS MOBILE (md-) */}
