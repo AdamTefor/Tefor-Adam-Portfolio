@@ -48,10 +48,8 @@ export default function Hero() {
         {/* ===== Colonne gauche : Texte ===== */}
         <div>
           <motion.p variants={fadeUp} className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-brand">
-            Ingénieur Informatique & Réseaux
-            <span className="hidden sm:inline-block rounded-full bg-brand/10 px-2 py-0.5 text-[11px] text-brand">
-              Ouvert aux opportunités de stage PFE
-            </span>
+            Ingénieur d'état Informatique & Réseaux
+    
           </motion.p>
 
           <motion.h1 variants={fadeUp} className="text-4xl md:text-6xl font-extrabold mt-2 leading-tight">
@@ -63,7 +61,7 @@ export default function Hero() {
 
           <motion.p variants={fadeUp} className="mt-6 text-slate-700 dark:text-white/80 max-w-xl">
             Testing fonctionnel & automatisation • Développement Full-Stack • Certifié ISTQB® Foundation Level •
-            à la recherche d’un stage PFE à partir de février 2026.
+
           </motion.p>
 
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-3">
@@ -71,14 +69,10 @@ export default function Hero() {
             <a href="#experience" className={`${ctaBase} bg-slate-900/5 dark:bg-white/5 hover:bg-slate-900/10 dark:hover:bg-white/10 border border-black/10 dark:border-white/10 text-slate-800 dark:text-white/90`}>
               Voir mes expériences
             </a>
-            <a
-  href="/cv/CV-ADAM-TEFOR.pdf"
-  download
-  onClick={() => (window as any).plausible?.('cv_download')} // 🔹 suivi Plausible
+          
+
   className={`${ctaBase} border border-black/10 dark:border-white/10 hover:border-brand/60 hover:text-brand`}
->
-  Télécharger mon CV
-</a>
+
 
           </motion.div>
 
